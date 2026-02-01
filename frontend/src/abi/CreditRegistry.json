@@ -1,0 +1,433 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "CreditRegistry",
+  "sourceName": "contracts/CreditRegistry.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "CircleCompletionRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newScore",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "previousScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreditScoreUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "DefaultRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "LatePaymentRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "OnTimePaymentRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "initialScore",
+          "type": "uint256"
+        }
+      ],
+      "name": "ProfileCreated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "BASE_CREDIT_SCORE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "CIRCLE_COMPLETION_BONUS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_PENALTY",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "LATE_PAYMENT_PENALTY",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_CREDIT_SCORE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MIN_CREDIT_SCORE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ON_TIME_PAYMENT_BONUS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "creditProfiles",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "creditScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "circlesJoined",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "circlesCompleted",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "onTimePayments",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "latePayments",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "defaults",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "hasDefaulted",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "getCreditProfile",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "creditScore",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "circlesJoined",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "circlesCompleted",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "onTimePayments",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "latePayments",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "defaults",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "hasDefaulted",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CreditRegistry.CreditProfile",
+          "name": "profile",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "getCreditScore",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "hasProfile",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "recordCircleCompletion",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "recordCircleJoin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "recordDefault",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "recordLatePayment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "participant",
+          "type": "address"
+        }
+      ],
+      "name": "recordOnTimePayment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600e575f5ffd5b5061090d8061001c5f395ff3fe608060405234801561000f575f5ffd5b50600436106100fb575f3560e01c80635c266d7a11610093578063a787c80b11610063578063a787c80b14610283578063a7933356146102b5578063bf15e017146102c8578063d3dd2bdf146102d0575f5ffd5b80635c266d7a14610242578063710cf95b1461025557806383baea63146102685780638df7352c14610270575f5ffd5b806345171f26116100ce57806345171f26146101a55780634f708cd314610229578063530f5c771461023157806354203e0914610239575f5ffd5b8063079bafe3146100ff57806308ebefa0146101725780630a49cf4d146101895780631fb2ba4414610190575b5f5ffd5b61011261010d366004610852565b6102e3565b60405161016991905f60e082019050825182526020830151602083015260408301516040830152606083015160608301526080830151608083015260a083015160a083015260c0830151151560c083015292915050565b60405180910390f35b61017b61012c81565b604051908152602001610169565b61017b5f81565b6101a361019e366004610852565b6103e9565b005b6101f26101b3366004610852565b5f602081905290815260409020805460018201546002830154600384015460048501546005860154600690960154949593949293919290919060ff1687565b604080519788526020880196909652948601939093526060850191909152608084015260a0830152151560c082015260e001610169565b61017b600f81565b61017b600a81565b61017b6103e881565b6101a3610250366004610852565b6104d6565b6101a3610263366004610852565b610578565b61017b601481565b6101a361027e366004610852565b6105af565b6102a5610291366004610852565b60016020525f908152604090205460ff1681565b6040519015158152602001610169565b6101a36102c3366004610852565b610675565b61017b606481565b61017b6102de366004610852565b610715565b61031e6040518060e001604052805f81526020015f81526020015f81526020015f81526020015f81526020015f81526020015f151581525090565b6001600160a01b0382165f9081526001602052604090205460ff1661037b576040518060e0016040528061012c81526020015f81526020015f81526020015f81526020015f81526020015f81526020015f15158152509050919050565b506001600160a01b03165f9081526020818152604091829020825160e081018452815481526001820154928101929092526002810154928201929092526003820154606082015260048201546080820152600582015460a082015260069091015460ff16151560c082015290565b6103f281610758565b6001600160a01b0381165f908152602081905260408120805460029091018054919261041d83610893565b909155505f905061042f600f836108ab565b90506103e881111561044057506103e85b6001600160a01b0383165f818152602081815260409182902084905590518381527f33d0925b69a38b781c40ae363a2ef3483d8bcb13ee3c5e8e6a402a2889b8bd7e91015b60405180910390a260408051828152602081018490526001600160a01b038516917f4f43648f37bc26ee5bc39c60c1c1e2481a9fb9feb9f86419c91b4645585ff3bc910160405180910390a2505050565b6104df81610758565b6001600160a01b0381165f908152602081905260408120805460049091018054919261050a83610893565b91905055505f601482101561051f575f61052a565b61052a6014836108c4565b6001600160a01b0384165f8181526020818152604091829020849055905183815292935090917f21d163b78d8a4785f7817b046ad2bf108f439311418f244f1486c42ccf08367f9101610485565b61058181610758565b6001600160a01b0381165f9081526020819052604081206001018054916105a783610893565b919050555050565b6105b881610758565b6001600160a01b0381165f90815260208190526040812080546005909101805491926105e383610893565b90915550506001600160a01b0382165f908152602081905260408120600601805460ff19166001179055606482101561061c575f610627565b6106276064836108c4565b6001600160a01b0384165f8181526020818152604091829020849055905183815292935090917f1d9938520c17ffed9a7f1a4489b2bdb04e5570305d789b904cccb81ba0e2d1b69101610485565b61067e81610758565b6001600160a01b0381165f90815260208190526040812080546003909101805491926106a983610893565b909155505f90506106bb600a836108ab565b90506103e88111156106cc57506103e85b6001600160a01b0383165f818152602081815260409182902084905590518381527fef543f3ff2d0047c4966b1f69e2d33daab7fb6f39225daaad86c6ba112fad60e9101610485565b6001600160a01b0381165f9081526001602052604081205460ff1661073d575061012c919050565b506001600160a01b03165f9081526020819052604090205490565b6001600160a01b0381165f9081526001602052604090205460ff1661084f576040805160e08101825261012c8082525f6020808401828152848601838152606086018481526080870185815260a0880186815260c089018781526001600160a01b038c168089528888528b89209a518b55955160018b810191909155945160028b0155925160038a015590516004890155516005880155516006909601805496151560ff199788161790559182905291859020805490941617909255915190917fcb939889322fed25104a5d8945bde5162563412a1fd718946cdcacb03088ea089161084691815260200190565b60405180910390a25b50565b5f60208284031215610862575f5ffd5b81356001600160a01b0381168114610878575f5ffd5b9392505050565b634e487b7160e01b5f52601160045260245ffd5b5f600182016108a4576108a461087f565b5060010190565b808201808211156108be576108be61087f565b92915050565b818103818111156108be576108be61087f56fea26469706673582212207f2dd5150654dbaf318fa35e3ba71b4878a13dbe8b72bc8231c2ca17c9254e5464736f6c634300081c0033",
+  "deployedBytecode": "0x608060405234801561000f575f5ffd5b50600436106100fb575f3560e01c80635c266d7a11610093578063a787c80b11610063578063a787c80b14610283578063a7933356146102b5578063bf15e017146102c8578063d3dd2bdf146102d0575f5ffd5b80635c266d7a14610242578063710cf95b1461025557806383baea63146102685780638df7352c14610270575f5ffd5b806345171f26116100ce57806345171f26146101a55780634f708cd314610229578063530f5c771461023157806354203e0914610239575f5ffd5b8063079bafe3146100ff57806308ebefa0146101725780630a49cf4d146101895780631fb2ba4414610190575b5f5ffd5b61011261010d366004610852565b6102e3565b60405161016991905f60e082019050825182526020830151602083015260408301516040830152606083015160608301526080830151608083015260a083015160a083015260c0830151151560c083015292915050565b60405180910390f35b61017b61012c81565b604051908152602001610169565b61017b5f81565b6101a361019e366004610852565b6103e9565b005b6101f26101b3366004610852565b5f602081905290815260409020805460018201546002830154600384015460048501546005860154600690960154949593949293919290919060ff1687565b604080519788526020880196909652948601939093526060850191909152608084015260a0830152151560c082015260e001610169565b61017b600f81565b61017b600a81565b61017b6103e881565b6101a3610250366004610852565b6104d6565b6101a3610263366004610852565b610578565b61017b601481565b6101a361027e366004610852565b6105af565b6102a5610291366004610852565b60016020525f908152604090205460ff1681565b6040519015158152602001610169565b6101a36102c3366004610852565b610675565b61017b606481565b61017b6102de366004610852565b610715565b61031e6040518060e001604052805f81526020015f81526020015f81526020015f81526020015f81526020015f81526020015f151581525090565b6001600160a01b0382165f9081526001602052604090205460ff1661037b576040518060e0016040528061012c81526020015f81526020015f81526020015f81526020015f81526020015f81526020015f15158152509050919050565b506001600160a01b03165f9081526020818152604091829020825160e081018452815481526001820154928101929092526002810154928201929092526003820154606082015260048201546080820152600582015460a082015260069091015460ff16151560c082015290565b6103f281610758565b6001600160a01b0381165f908152602081905260408120805460029091018054919261041d83610893565b909155505f905061042f600f836108ab565b90506103e881111561044057506103e85b6001600160a01b0383165f818152602081815260409182902084905590518381527f33d0925b69a38b781c40ae363a2ef3483d8bcb13ee3c5e8e6a402a2889b8bd7e91015b60405180910390a260408051828152602081018490526001600160a01b038516917f4f43648f37bc26ee5bc39c60c1c1e2481a9fb9feb9f86419c91b4645585ff3bc910160405180910390a2505050565b6104df81610758565b6001600160a01b0381165f908152602081905260408120805460049091018054919261050a83610893565b91905055505f601482101561051f575f61052a565b61052a6014836108c4565b6001600160a01b0384165f8181526020818152604091829020849055905183815292935090917f21d163b78d8a4785f7817b046ad2bf108f439311418f244f1486c42ccf08367f9101610485565b61058181610758565b6001600160a01b0381165f9081526020819052604081206001018054916105a783610893565b919050555050565b6105b881610758565b6001600160a01b0381165f90815260208190526040812080546005909101805491926105e383610893565b90915550506001600160a01b0382165f908152602081905260408120600601805460ff19166001179055606482101561061c575f610627565b6106276064836108c4565b6001600160a01b0384165f8181526020818152604091829020849055905183815292935090917f1d9938520c17ffed9a7f1a4489b2bdb04e5570305d789b904cccb81ba0e2d1b69101610485565b61067e81610758565b6001600160a01b0381165f90815260208190526040812080546003909101805491926106a983610893565b909155505f90506106bb600a836108ab565b90506103e88111156106cc57506103e85b6001600160a01b0383165f818152602081815260409182902084905590518381527fef543f3ff2d0047c4966b1f69e2d33daab7fb6f39225daaad86c6ba112fad60e9101610485565b6001600160a01b0381165f9081526001602052604081205460ff1661073d575061012c919050565b506001600160a01b03165f9081526020819052604090205490565b6001600160a01b0381165f9081526001602052604090205460ff1661084f576040805160e08101825261012c8082525f6020808401828152848601838152606086018481526080870185815260a0880186815260c089018781526001600160a01b038c168089528888528b89209a518b55955160018b810191909155945160028b0155925160038a015590516004890155516005880155516006909601805496151560ff199788161790559182905291859020805490941617909255915190917fcb939889322fed25104a5d8945bde5162563412a1fd718946cdcacb03088ea089161084691815260200190565b60405180910390a25b50565b5f60208284031215610862575f5ffd5b81356001600160a01b0381168114610878575f5ffd5b9392505050565b634e487b7160e01b5f52601160045260245ffd5b5f600182016108a4576108a461087f565b5060010190565b808201808211156108be576108be61087f565b92915050565b818103818111156108be576108be61087f56fea26469706673582212207f2dd5150654dbaf318fa35e3ba71b4878a13dbe8b72bc8231c2ca17c9254e5464736f6c634300081c0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/CreditRegistry.sol",
+  "buildInfoId": "solc-0_8_28-f86775fe193af4fa56a2f93fc95b5a864ee83756"
+}

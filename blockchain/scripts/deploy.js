@@ -1,12 +1,15 @@
 import hre from "hardhat";
-import { formatEther, createWalletClient, createPublicClient, http } from "viem";
+import { formatEther, createWalletClient, createPublicClient, http, getContract } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { config } from "dotenv";
-import { resolve } from "path";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
-// Load .env file from blockchain directory
-config({ path: resolve(process.cwd(), ".env") });
+// Load .env file from blockchain directory (parent of scripts directory)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+config({ path: resolve(__dirname, "..", ".env") });
 
 /**
  * Deployment script for CreditCoin Lending Circle Protocol
@@ -98,7 +101,11 @@ async function main() {
   console.log("✅ CreditRegistry deployed to:", creditRegistryAddress);
   
   // Verify base credit score
-  const creditRegistry = await hre.viem.getContractAt("CreditRegistry", creditRegistryAddress);
+  const creditRegistry = getContract({
+    address: creditRegistryAddress,
+    abi: creditRegistryArtifact.abi,
+    client: { public: publicClient, wallet: walletClient },
+  });
   const baseScore = await creditRegistry.read.BASE_CREDIT_SCORE();
   console.log("   Base credit score:", baseScore.toString(), "\n");
 
@@ -135,7 +142,11 @@ async function main() {
   // 4. Update ReservePool factory address
   // ============================================
   console.log("4️⃣  Updating ReservePool factory address...");
-  const reservePool = await hre.viem.getContractAt("ReservePool", reservePoolAddress);
+  const reservePool = getContract({
+    address: reservePoolAddress,
+    abi: reservePoolArtifact.abi,
+    client: { public: publicClient, wallet: walletClient },
+  });
   await reservePool.write.setFactory([factoryAddress]);
   console.log("✅ ReservePool factory address updated\n");
 
