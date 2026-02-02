@@ -2,7 +2,7 @@
 
 import { useCreditScore, useCreditProfile } from "@/lib/hooks/useCreditScore";
 import { useAccount } from "wagmi";
-import { MAX_CREDIT_SCORE, BASE_CREDIT_SCORE } from "@/lib/contracts/config";
+import { BASE_CREDIT_SCORE } from "@/lib/contracts/config";
 
 export function CreditScoreCard() {
   const { address } = useAccount();
@@ -20,12 +20,12 @@ export function CreditScoreCard() {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <p>Loading credit score...</p>
+        <p className="text-gray-900">Loading credit score...</p>
       </div>
     );
   }
 
-  const scorePercentage = (creditScore / MAX_CREDIT_SCORE) * 100;
+  // Dynamic color based on score ranges (no maximum limit)
   const scoreColor =
     creditScore >= 700
       ? "text-green-600"
@@ -35,9 +35,14 @@ export function CreditScoreCard() {
       ? "text-orange-600"
       : "text-red-600";
 
+  // Calculate progress bar width based on a visual scale (not a hard limit)
+  // Use a dynamic scale that adjusts based on the score
+  const visualScale = Math.max(creditScore * 1.2, 1000); // Scale adjusts to show progress
+  const progressWidth = Math.min((creditScore / visualScale) * 100, 100);
+
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold mb-4">Credit Score</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900">Credit Score</h2>
       <div className="flex items-center gap-4 mb-6">
         <div className={`text-6xl font-bold ${scoreColor}`}>{creditScore}</div>
         <div className="flex-1">
@@ -52,11 +57,11 @@ export function CreditScoreCard() {
                   ? "bg-orange-600"
                   : "bg-red-600"
               }`}
-              style={{ width: `${scorePercentage}%` }}
+              style={{ width: `${progressWidth}%` }}
             />
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            {scorePercentage.toFixed(1)}% of maximum ({MAX_CREDIT_SCORE})
+            Credit Score: {creditScore} points
           </p>
         </div>
       </div>
@@ -65,11 +70,11 @@ export function CreditScoreCard() {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-gray-500">Circles Joined</p>
-            <p className="font-semibold">{profile.circlesJoined}</p>
+            <p className="font-semibold text-gray-900">{profile.circlesJoined}</p>
           </div>
           <div>
             <p className="text-gray-500">Circles Completed</p>
-            <p className="font-semibold">{profile.circlesCompleted}</p>
+            <p className="font-semibold text-gray-900">{profile.circlesCompleted}</p>
           </div>
           <div>
             <p className="text-gray-500">On-Time Payments</p>

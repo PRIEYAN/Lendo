@@ -6,7 +6,7 @@ import { useUserCircles } from "@/lib/hooks/useLendingCircles";
 import { CreditScoreCard } from "@/components/CreditScoreCard";
 import Link from "next/link";
 import { formatAddress } from "@/lib/utils";
-import { MAX_CREDIT_SCORE, BASE_CREDIT_SCORE } from "@/lib/contracts/config";
+import { BASE_CREDIT_SCORE } from "@/lib/contracts/config";
 
 export default function ProfilePage() {
   const { address, isConnected } = useAccount();
@@ -31,7 +31,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p>Loading profile...</p>
+        <p className="text-gray-900">Loading profile...</p>
       </div>
     );
   }
@@ -47,7 +47,7 @@ export default function ProfilePage() {
       {profile && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold mb-4">Payment History</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">Payment History</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
                 <div>
@@ -80,7 +80,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold mb-4">Circle Participation</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">Circle Participation</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
                 <div>
@@ -104,24 +104,24 @@ export default function ProfilePage() {
       )}
 
       <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Credit Score Breakdown</h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-900">Credit Score Breakdown</h2>
         <div className="space-y-4">
           <div className="p-4 border rounded-lg">
-            <p className="font-semibold mb-2">Base Credit Score</p>
+            <p className="font-semibold mb-2 text-gray-900">Base Credit Score</p>
             <p className="text-gray-600">{BASE_CREDIT_SCORE} points</p>
             <p className="text-sm text-gray-500 mt-1">
               Every address starts with a base credit score of {BASE_CREDIT_SCORE} points.
             </p>
           </div>
           <div className="p-4 border rounded-lg">
-            <p className="font-semibold mb-2">Maximum Credit Score</p>
-            <p className="text-gray-600">{MAX_CREDIT_SCORE} points</p>
+            <p className="font-semibold mb-2 text-gray-900">Credit Score Growth</p>
+            <p className="text-gray-600">Unlimited</p>
             <p className="text-sm text-gray-500 mt-1">
-              The maximum credit score you can achieve is {MAX_CREDIT_SCORE} points.
+              Your credit score can grow indefinitely through good payment behavior and circle completions.
             </p>
           </div>
           <div className="p-4 border rounded-lg">
-            <p className="font-semibold mb-2">How Credit Scores Work</p>
+            <p className="font-semibold mb-2 text-gray-900">How Credit Scores Work</p>
             <ul className="list-disc list-inside text-sm text-gray-600 space-y-1 mt-2">
               <li>On-time payment: +10 points</li>
               <li>Late payment: -20 points</li>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
 
       {userCircles && userCircles.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold mb-4">Your Circles</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-900">Your Circles</h2>
           <div className="space-y-2">
             {userCircles.map((circleAddress) => (
               <Link
@@ -142,7 +142,7 @@ export default function ProfilePage() {
                 href={`/circles/${circleAddress}`}
                 className="block p-4 border rounded-lg hover:bg-gray-50 transition"
               >
-                <p className="font-mono text-sm">{formatAddress(circleAddress)}</p>
+                <p className="font-mono text-sm text-gray-900">{formatAddress(circleAddress)}</p>
               </Link>
             ))}
           </div>

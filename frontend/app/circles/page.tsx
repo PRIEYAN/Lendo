@@ -52,7 +52,7 @@ function CircleCard({ circleAddress }: { circleAddress: `0x${string}` }) {
   if (isLoading || !details) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <p>Loading...</p>
+        <p className="text-gray-900">Loading...</p>
       </div>
     );
   }
@@ -60,7 +60,7 @@ function CircleCard({ circleAddress }: { circleAddress: `0x${string}` }) {
   return (
     <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-semibold">Circle</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Circle</h3>
         <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(details.status)}`}>
           {getCircleStatus(details.status)}
         </span>
@@ -69,25 +69,25 @@ function CircleCard({ circleAddress }: { circleAddress: `0x${string}` }) {
       <div className="space-y-2 mb-4 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-500">Monthly Contribution:</span>
-          <span className="font-semibold">{details.monthlyContribution} CC</span>
+          <span className="font-semibold text-gray-900">{details.monthlyContribution} CC</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">Duration:</span>
-          <span className="font-semibold">{details.durationInMonths} months</span>
+          <span className="font-semibold text-gray-900">{details.durationInMonths} months</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">Participants:</span>
-          <span className="font-semibold">
+          <span className="font-semibold text-gray-900">
             {details.totalParticipants} / {details.maxParticipants}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">Current Month:</span>
-          <span className="font-semibold">{details.currentMonth + 1} / {details.durationInMonths}</span>
+          <span className="font-semibold text-gray-900">{details.currentMonth + 1} / {details.durationInMonths}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500">Pool Balance:</span>
-          <span className="font-semibold">{details.poolBalance} CC</span>
+          <span className="font-semibold text-gray-900">{details.poolBalance} CC</span>
         </div>
       </div>
 

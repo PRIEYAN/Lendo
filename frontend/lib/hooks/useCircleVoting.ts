@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useReadContract, useReadContracts } from "wagmi";
 import { LENDING_CIRCLE_ABI } from "../contracts/abis/LendingCircle";
 import { CREDIT_REGISTRY_ABI } from "../contracts/abis/CreditRegistry";
@@ -85,4 +86,47 @@ export function useVotingStatus(circleAddress: `0x${string}` | undefined, month:
     isEnded: isEnded || false,
     winner: winner as `0x${string}` | undefined,
   };
+}
+
+export function useBackendWinner(
+  circleAddress: `0x${string}` | undefined,
+  month: number
+) {
+  const [data, setData] = useState<{
+    winner: string | null;
+    candidates: Array<{
+      address: string;
+      votes: string;
+      creditScore: string;
+    }>;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!circleAddress || month === undefined) return;
+
+    setIsLoading(true);
+    fetch("http://localhost:3001/api/calculate-winner", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        circleAddress,
+        month,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setIsLoading(false);
+      });
+  }, [circleAddress, month]);
+
+  return { data, isLoading, error };
 }

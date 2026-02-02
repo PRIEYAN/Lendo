@@ -113,7 +113,7 @@ export default function CreateCirclePage() {
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <p className="text-sm text-blue-800">
-          <strong>Your Credit Score:</strong> {creditScore} / 1000
+          <strong>Your Credit Score:</strong> {creditScore} points
         </p>
         <p className="text-sm text-blue-800 mt-1">
           Credit-based limits: Max contribution {formatEther(creditScore * MAX_CONTRIBUTION_PER_CREDIT)} CC, 
@@ -217,6 +217,20 @@ export default function CreateCirclePage() {
             <option value="0">Withdrawable</option>
             <option value="1">Auto-Deduct</option>
           </select>
+          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800 font-semibold mb-1">What is "Excess"?</p>
+            <p className="text-xs text-blue-700 mb-2">
+              Sometimes extra funds accumulate in the pool (leftover money from previous months, rounding differences, etc.)
+            </p>
+            <div className="space-y-2 text-xs text-blue-700">
+              <div>
+                <strong>Withdrawable:</strong> Excess funds are given to participants, and they can manually withdraw them anytime using the "Withdraw Excess" button.
+              </div>
+              <div>
+                <strong>Auto-Deduct:</strong> Excess funds are automatically used to pay for your next monthly contribution. If you have excess, you'll pay less (or nothing) next month!
+              </div>
+            </div>
+          </div>
         </div>
 
         {errors.totalExposure && (

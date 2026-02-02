@@ -168,7 +168,11 @@ app.post('/api/calculate-winner', async (req, res) => {
       if (a.creditScore < b.creditScore) return 1;
       
       // Finally alphabetical (lower address string wins)
-      return a.address.toLowerCase() < b.address.toLowerCase() ? -1 : 1;
+      const addrA = a.address.toLowerCase();
+      const addrB = b.address.toLowerCase();
+      if (addrA < addrB) return -1;
+      if (addrA > addrB) return 1;
+      return 0; // Should never happen as addresses are unique
     });
 
     // Get winner from contract (if voting ended and executed)
@@ -239,6 +243,42 @@ app.post('/api/candidate-votes', async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting votes:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Check if a user has voted for a month
+ */
+app.post('/api/has-voted', async (req, res) => {
+  try {
+    const { circleAddress, month, voterAddress } = req.body;
+    
+    if (!circleAddress || month === undefined || !voterAddress) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    // Read the vote mapping - we need to check if the vote exists
+    // Since hasVoted is not directly accessible, we'll try to read the vote struct
+    // This is a workaround - ideally the contract would have a hasVoted getter
+    try {
+      // Try to get the vote - if it doesn't exist, the call will fail
+      // We'll check if the vote exists by trying to read it
+      const proposal = await publicClient.readContract({
+        address: circleAddress,
+        abi: lendingCircleABI,
+        functionName: 'getCandidates',
+        args: [BigInt(month)],
+      });
+      
+      // For now, return false as we can't directly check
+      // In production, you'd want to add a hasVoted getter to the contract
+      res.json({ hasVoted: false });
+    } catch (e) {
+      res.json({ hasVoted: false });
+    }
+  } catch (error) {
+    console.error('Error checking vote status:', error);
     res.status(500).json({ error: error.message });
   }
 });

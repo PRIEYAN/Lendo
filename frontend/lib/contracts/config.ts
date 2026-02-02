@@ -31,9 +31,9 @@ export const CREDITCOIN_CHAIN = {
 
 // Contract addresses - UPDATE THESE WITH YOUR DEPLOYED ADDRESSES
 export const CONTRACT_ADDRESSES = {
-  creditRegistry: "0x0000000000000000000000000000000000000000", // UPDATE
-  reservePool: "0x0000000000000000000000000000000000000000", // UPDATE
-  factory: "0x0000000000000000000000000000000000000000", // UPDATE
+  creditRegistry: "0x7dc508ac5ee4c9d864c0f1a1514efadd8295f76d",
+  reservePool: "0xfb2043fcf329d61056d3b1fabf61825da9d1288a",
+  factory: "0x49e509f39b110820f221957c003e7ce793f10ef4",
 } as const;
 
 // Contract ABIs will be imported from separate files

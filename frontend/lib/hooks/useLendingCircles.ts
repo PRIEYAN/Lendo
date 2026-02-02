@@ -31,7 +31,7 @@ export function useAllCircles(limit = 50) {
 
 export function useCircleDetails(circleAddress: `0x${string}` | undefined) {
   if (!circleAddress) {
-    return { data: null, isLoading: false };
+    return { data: null, isLoading: false, error: null };
   }
 
   const contracts = [
@@ -87,27 +87,45 @@ export function useCircleDetails(circleAddress: `0x${string}` | undefined) {
     },
   ];
 
-  const { data, isLoading } = useReadContracts({ contracts });
+  const { data, isLoading, error } = useReadContracts({ contracts });
 
-  if (!data || isLoading) {
-    return { data: null, isLoading };
+  if (isLoading) {
+    return { data: null, isLoading: true, error: null };
   }
 
-  return {
-    data: {
-      creator: data[0].result as `0x${string}`,
-      monthlyContribution: formatEther((data[1].result as bigint) || 0n),
-      durationInMonths: Number(data[2].result || 0n),
-      minParticipants: Number(data[3].result || 0n),
-      maxParticipants: Number(data[4].result || 0n),
-      reservePercentage: Number(data[5].result || 0n),
-      status: Number(data[6].result || 0n), // 0: PENDING, 1: ACTIVE, 2: COMPLETED, 3: CANCELLED
-      currentMonth: Number(data[7].result || 0n),
-      totalParticipants: Number(data[8].result || 0n),
-      poolBalance: formatEther((data[9].result as bigint) || 0n),
-    },
-    isLoading: false,
-  };
+  if (error || !data) {
+    return { data: null, isLoading: false, error: error || new Error("Failed to fetch circle details") };
+  }
+
+  // Check if all required data is available
+  const hasAllData = data.every((item) => item.status === "success" && item.result !== undefined);
+  
+  if (!hasAllData) {
+    // Some calls failed, but we can still try to show what we have
+    console.warn("Some contract calls failed:", data);
+  }
+
+  try {
+    return {
+      data: {
+        creator: (data[0]?.result as `0x${string}`) || "0x0000000000000000000000000000000000000000",
+        monthlyContribution: formatEther((data[1]?.result as bigint) || 0n),
+        durationInMonths: Number(data[2]?.result || 0n),
+        minParticipants: Number(data[3]?.result || 0n),
+        maxParticipants: Number(data[4]?.result || 0n),
+        reservePercentage: Number(data[5]?.result || 0n),
+        status: Number(data[6]?.result || 0n), // 0: PENDING, 1: ACTIVE, 2: COMPLETED, 3: CANCELLED
+        currentMonth: Number(data[7]?.result || 0n),
+        totalParticipants: Number(data[8]?.result || 0n),
+        poolBalance: formatEther((data[9]?.result as bigint) || 0n),
+      },
+      isLoading: false,
+      error: null,
+    };
+  } catch (err) {
+    console.error("Error processing circle details:", err);
+    return { data: null, isLoading: false, error: err as Error };
+  }
 }
 
 export function useUserCircles(userAddress: `0x${string}` | undefined) {

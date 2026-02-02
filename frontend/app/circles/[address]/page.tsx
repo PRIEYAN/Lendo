@@ -7,19 +7,41 @@ import { TransactionButton } from "@/components/TransactionButton";
 import { LENDING_CIRCLE_ABI } from "@/lib/contracts/abis/LendingCircle";
 import { parseEther, formatEther, getCircleStatus, getStatusColor } from "@/lib/utils";
 import { VotingUI } from "@/components/VotingUI";
+import { ChatBox } from "@/components/ChatBox";
 import { useState } from "react";
 
 export default function CircleDetailPage() {
   const params = useParams();
   const circleAddress = params.address as `0x${string}`;
-  const { data: details, isLoading } = useCircleDetails(circleAddress);
+  const { data: details, isLoading, error } = useCircleDetails(circleAddress);
   const { address, isConnected } = useAccount();
   const [refreshKey, setRefreshKey] = useState(0);
 
-  if (isLoading || !details) {
+  if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p>Loading circle details...</p>
+        <div className="bg-white rounded-lg shadow p-6">
+          <p className="text-gray-600">Loading circle details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !details) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h2 className="text-xl font-bold text-red-800 mb-2">Error Loading Circle Details</h2>
+          <p className="text-red-600 mb-4">
+            {error?.message || "Failed to load circle details. Please check:"}
+          </p>
+          <ul className="list-disc list-inside text-red-600 space-y-1">
+            <li>Circle address: {circleAddress}</li>
+            <li>Make sure you're connected to the correct network</li>
+            <li>Verify the circle address is correct</li>
+            <li>Check that the contract is deployed</li>
+          </ul>
+        </div>
       </div>
     );
   }
@@ -40,42 +62,56 @@ export default function CircleDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold mb-4">Circle Information</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">Circle Information</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-gray-500 text-sm">Monthly Contribution</p>
-                <p className="font-semibold text-lg">{details.monthlyContribution} CC</p>
+                <p className="font-semibold text-lg text-gray-900">
+                  {parseFloat(details.monthlyContribution) > 0 
+                    ? `${parseFloat(details.monthlyContribution).toFixed(2)} CC`
+                    : "0 CC"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Duration</p>
-                <p className="font-semibold text-lg">{details.durationInMonths} months</p>
+                <p className="font-semibold text-lg text-gray-900">
+                  {details.durationInMonths > 0 ? `${details.durationInMonths} months` : "N/A"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Participants</p>
-                <p className="font-semibold text-lg">
+                <p className="font-semibold text-lg text-gray-900">
                   {details.totalParticipants} / {details.maxParticipants}
                 </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Current Month</p>
-                <p className="font-semibold text-lg">
+                <p className="font-semibold text-lg text-gray-900">
                   {details.currentMonth + 1} / {details.durationInMonths}
                 </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Pool Balance</p>
-                <p className="font-semibold text-lg">{details.poolBalance} CC</p>
+                <p className="font-semibold text-lg text-gray-900">
+                  {parseFloat(details.poolBalance) > 0 
+                    ? `${parseFloat(details.poolBalance).toFixed(2)} CC`
+                    : "0 CC"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Reserve Percentage</p>
-                <p className="font-semibold text-lg">{details.reservePercentage}%</p>
+                <p className="font-semibold text-lg text-gray-900">{details.reservePercentage}%</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-gray-500 text-sm">Circle Address</p>
+                <p className="font-mono text-xs text-gray-600 break-all">{circleAddress}</p>
               </div>
             </div>
           </div>
 
           {isActive && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold mb-4">Current Month Actions</h2>
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">Current Month Actions</h2>
               <div className="space-y-4">
                 {isConnected && (
                   <MakeContributionButton
@@ -96,12 +132,16 @@ export default function CircleDetailPage() {
               key={refreshKey}
             />
           )}
+
+          {isActive && (
+            <ChatBox circleAddress={circleAddress} />
+          )}
         </div>
 
         <div className="space-y-6">
           {isPending && isConnected && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Join Circle</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">Join Circle</h3>
               <TransactionButton
                 contractAddress={circleAddress}
                 abi={LENDING_CIRCLE_ABI}
@@ -116,7 +156,7 @@ export default function CircleDetailPage() {
 
           {isCoordinator && isPending && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Coordinator Actions</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">Coordinator Actions</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Approve or reject participants who requested to join.
               </p>
@@ -128,7 +168,7 @@ export default function CircleDetailPage() {
 
           {isConnected && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Withdraw Excess</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">Withdraw Excess</h3>
               <TransactionButton
                 contractAddress={circleAddress}
                 abi={LENDING_CIRCLE_ABI}
@@ -178,7 +218,7 @@ function MakeContributionButton({
 
   return (
     <div>
-      <h3 className="font-semibold mb-2">Make Monthly Contribution</h3>
+      <h3 className="font-semibold mb-2 text-gray-900">Make Monthly Contribution</h3>
       <p className="text-sm text-gray-600 mb-4">Amount: {amount} CC</p>
       <TransactionButton
         contractAddress={circleAddress}

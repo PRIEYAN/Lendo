@@ -35,7 +35,7 @@ export default function HomePage() {
         </div>
         <div className="space-y-4">
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900">Quick Actions</h3>
             <div className="space-y-3">
               <Link
                 href="/circles"
@@ -69,21 +69,21 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <div className="text-3xl font-bold text-blue-600 mb-2">1</div>
-            <h3 className="font-semibold mb-2">Join a Circle</h3>
+            <h3 className="font-semibold mb-2 text-gray-900">Join a Circle</h3>
             <p className="text-gray-600">
               Browse available lending circles and request to join. Circle coordinators approve participants.
             </p>
           </div>
           <div>
             <div className="text-3xl font-bold text-blue-600 mb-2">2</div>
-            <h3 className="font-semibold mb-2">Make Contributions</h3>
+            <h3 className="font-semibold mb-2 text-gray-900">Make Contributions</h3>
             <p className="text-gray-600">
               Contribute monthly payments. On-time payments boost your credit score.
             </p>
           </div>
           <div>
             <div className="text-3xl font-bold text-blue-600 mb-2">3</div>
-            <h3 className="font-semibold mb-2">Vote & Receive</h3>
+            <h3 className="font-semibold mb-2 text-gray-900">Vote & Receive</h3>
             <p className="text-gray-600">
               Vote for payout recipients. Your voting power is based on your credit score.
             </p>

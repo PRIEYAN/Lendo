@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
+import { ChainChecker } from "@/components/ChainChecker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Navigation />
+          <ChainChecker />
           <main className="min-h-screen bg-gray-50">{children}</main>
         </Providers>
       </body>
