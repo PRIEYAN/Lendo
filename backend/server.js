@@ -224,18 +224,25 @@ app.get('/api/chat/:circleAddress', (req, res) => {
 app.post('/api/candidate-votes', async (req, res) => {
   try {
     const { circleAddress, month, candidate } = req.body;
-    
-    // Get total participants
-    const totalParticipants = await publicClient.readContract({
-      address: circleAddress,
-      abi: lendingCircleABI,
-      functionName: 'totalParticipants',
-    });
 
-    // Count votes by checking each participant
-    // This is simplified - in production you'd want to index events
-    let voteCount = 0n;
-    
+    if (!circleAddress || month === undefined || !candidate) {
+      return res.status(400).json({ error: 'Missing circleAddress, month or candidate' });
+    }
+
+    const [voteCount, totalParticipants] = await Promise.all([
+      publicClient.readContract({
+        address: circleAddress,
+        abi: lendingCircleABI,
+        functionName: 'getCandidateVotes',
+        args: [BigInt(month), candidate],
+      }),
+      publicClient.readContract({
+        address: circleAddress,
+        abi: lendingCircleABI,
+        functionName: 'totalParticipants',
+      }),
+    ]);
+
     res.json({
       candidate,
       votes: voteCount.toString(),
@@ -249,34 +256,32 @@ app.post('/api/candidate-votes', async (req, res) => {
 
 /**
  * Check if a user has voted for a month
+ * Reads on-chain VoteCast events instead of guessing, since the contract's
+ * per-voter vote record is a nested mapping with no public getter.
  */
 app.post('/api/has-voted', async (req, res) => {
   try {
     const { circleAddress, month, voterAddress } = req.body;
-    
+
     if (!circleAddress || month === undefined || !voterAddress) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Read the vote mapping - we need to check if the vote exists
-    // Since hasVoted is not directly accessible, we'll try to read the vote struct
-    // This is a workaround - ideally the contract would have a hasVoted getter
-    try {
-      // Try to get the vote - if it doesn't exist, the call will fail
-      // We'll check if the vote exists by trying to read it
-      const proposal = await publicClient.readContract({
-        address: circleAddress,
-        abi: lendingCircleABI,
-        functionName: 'getCandidates',
-        args: [BigInt(month)],
-      });
-      
-      // For now, return false as we can't directly check
-      // In production, you'd want to add a hasVoted getter to the contract
-      res.json({ hasVoted: false });
-    } catch (e) {
-      res.json({ hasVoted: false });
-    }
+    const logs = await publicClient.getContractEvents({
+      address: circleAddress,
+      abi: lendingCircleABI,
+      eventName: 'VoteCast',
+      args: { voter: voterAddress },
+      fromBlock: 0n,
+      toBlock: 'latest',
+    });
+
+    const matchingLog = logs.find((log) => log.args.month === BigInt(month));
+
+    res.json({
+      hasVoted: !!matchingLog,
+      candidate: matchingLog ? matchingLog.args.candidate : null,
+    });
   } catch (error) {
     console.error('Error checking vote status:', error);
     res.status(500).json({ error: error.message });

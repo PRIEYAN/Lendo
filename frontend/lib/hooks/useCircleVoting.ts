@@ -88,6 +88,48 @@ export function useVotingStatus(circleAddress: `0x${string}` | undefined, month:
   };
 }
 
+export function useHasVoted(
+  circleAddress: `0x${string}` | undefined,
+  month: number,
+  voterAddress: `0x${string}` | undefined
+) {
+  const [data, setData] = useState<{
+    hasVoted: boolean;
+    candidate: string | null;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!circleAddress || month === undefined || !voterAddress) {
+      setData(null);
+      return;
+    }
+
+    setIsLoading(true);
+    fetch("http://localhost:3001/api/has-voted", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        circleAddress,
+        month,
+        voterAddress,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, [circleAddress, month, voterAddress]);
+
+  return { data, isLoading };
+}
+
 export function useBackendWinner(
   circleAddress: `0x${string}` | undefined,
   month: number

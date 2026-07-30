@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { useCircleCandidates, useCandidateVotes, useVotingStatus, useBackendWinner } from "@/lib/hooks/useCircleVoting";
+import { useCircleCandidates, useCandidateVotes, useVotingStatus, useBackendWinner, useHasVoted } from "@/lib/hooks/useCircleVoting";
 import { TransactionButton } from "./TransactionButton";
 import { LENDING_CIRCLE_ABI } from "@/lib/contracts/abis/LendingCircle";
 import { formatAddress } from "@/lib/utils";
@@ -19,7 +19,8 @@ export function VotingUI({ circleAddress, month }: VotingUIProps) {
   const { isEnded, winner } = useVotingStatus(circleAddress, month);
   const { creditScore } = useCreditScore();
   const { data: backendWinnerData, isLoading: backendLoading } = useBackendWinner(circleAddress, month);
-  
+  const { data: hasVotedData } = useHasVoted(circleAddress, month, address);
+
   // Use backend winner data if available, otherwise use contract winner
   const displayWinner = backendWinnerData?.winner || winner;
   const sortedCandidates = backendWinnerData?.candidates || votes.map(v => ({
@@ -120,12 +121,20 @@ export function VotingUI({ circleAddress, month }: VotingUIProps) {
         </div>
       </div>
 
+      {hasVotedData?.hasVoted && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800">
+            You already voted for <strong>{formatAddress(hasVotedData.candidate || "")}</strong> this month.
+          </p>
+        </div>
+      )}
+
       {(votesLoading || backendLoading) ? (
         <p className="text-gray-900">Loading votes...</p>
       ) : (
         <div className="space-y-4">
           {sortedCandidates.map((candidate) => {
-            const voteData = votes.find(v => 
+            const voteData = votes.find(v =>
               v.candidate.toLowerCase() === candidate.address.toLowerCase()
             );
             return (
@@ -138,6 +147,7 @@ export function VotingUI({ circleAddress, month }: VotingUIProps) {
                 month={month}
                 userAddress={address}
                 userCreditScore={creditScore}
+                hasVoted={!!hasVotedData?.hasVoted}
               />
             );
           })}
@@ -179,6 +189,7 @@ function CandidateCard({
   month,
   userAddress,
   userCreditScore,
+  hasVoted,
 }: {
   candidate: `0x${string}`;
   votes: number;
@@ -187,6 +198,7 @@ function CandidateCard({
   month: number;
   userAddress: `0x${string}` | undefined;
   userCreditScore: number;
+  hasVoted: boolean;
 }) {
   const isUser = candidate.toLowerCase() === userAddress?.toLowerCase();
   const votePercentage = votes > 0 ? (votes / (votes + 100)) * 100 : 0; // Simplified calculation
@@ -217,15 +229,24 @@ function CandidateCard({
       </div>
       {userAddress && (
         <div className="mt-4">
-          <TransactionButton
-            contractAddress={circleAddress}
-            abi={LENDING_CIRCLE_ABI}
-            functionName="vote"
-            args={[BigInt(month), candidate]}
-            className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-          >
-            Vote (Power: {userCreditScore})
-          </TransactionButton>
+          {hasVoted ? (
+            <button
+              disabled
+              className="w-full px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
+            >
+              Already Voted
+            </button>
+          ) : (
+            <TransactionButton
+              contractAddress={circleAddress}
+              abi={LENDING_CIRCLE_ABI}
+              functionName="vote"
+              args={[BigInt(month), candidate]}
+              className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            >
+              Vote (Power: {userCreditScore})
+            </TransactionButton>
+          )}
         </div>
       )}
     </div>
