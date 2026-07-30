@@ -346,7 +346,7 @@ Scores are calculated and stored entirely on-chain, making them transparent, tam
     <td align="center">
       <a href="https://github.com/kiruthick01">
         <img src="https://github.com/kiruthick01.png" width="80" height="80" style="border-radius:50%" alt="kiruthick-699"/><br/>
-        <sub><b>kiruthick-699</b></sub>
+        <sub><b>kiruthick01</b></sub>
       </a>
     </td>
   </tr>
